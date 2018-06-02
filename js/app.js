@@ -1,7 +1,24 @@
+let moveCounter = document.querySelector('.moves');
+let kitty = document.querySelector('.card');
+let congrats = document.querySelector('.modal');
+let finishTime = document.getElementById('finishTime');
+let starRating = document.getElementById('starRating');
+let finalMove = document.getElementById('FinalMoveCount');
+let cards = document.getElementsByClassName('card');
+let restart = document.querySelector('.restart');
+
+
+
+
+
+
+
+
+
 /*
  * Create a list that holds all of your cards
  */
-const card = [
+const cardDeck = [
     'fa-cube',
     'fa-anchor',
     'fa-leaf',
@@ -64,90 +81,103 @@ function shuffle(array) {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
+
+
+
+
+
+//make cards clickable
+let shownCards = [];
+
+function cardDisplay() {
+    this.classList.add('open');
+    this.classList.add('show');
+    shownCards.push(this);
+    compare();
+}
+
+
+
+
+
+
+
+
 //start game
-
-
-
 function startGame() {
     const deck = document.querySelector('.deck');
-    const cardPic = shuffle(card).map(function(card) {
+    const cardPic = shuffle(cardDeck).map(function(card) {
         return makeCard(card);
     });
     deck.innerHTML = cardPic.join('');
+    for (let i = 0; i < cards.length; i++) {
+        cards[i].addEventListener('click', cardDisplay);
 
+    }
 
 
 }
-
 startGame();
 
-let totalMatches = 0;
-let moveCounter = document.querySelector('.moves');
+
+
+
+
+
+
+
+
+
+
+//compare cards
+
+let totalMatch = 0;
 let move = 0;
-let kitty = document.querySelectorAll('.card');
-const shownCards = [];
 
-//make cards clickable
-kitty.forEach(function(card) {
-    card.addEventListener('click', function(e) {
+function match() {
 
-        shownCards.push(card);
-        card.classList.add('open', 'show');
-
-        //compare cards
-        if (shownCards.length === 2) {
+    shownCards[0].classList.add('match');
+    shownCards[1].classList.add('match');
+    shownCards[0].classList.remove('open', 'show');
+    shownCards[1].classList.remove('open', 'show');
+    shownCards = [];
+    totalMatch++;
+}
 
 
-            //if they match
-            if (shownCards[0].dataset.card == shownCards[1].dataset.card) {
-                shownCards[0].classList.add('match');
-                shownCards[0].classList.add('open');
-                shownCards[0].classList.add('show');
+function noMatch() {
+    setTimeout(function() {
+        shownCards.forEach(function(card) {
+            card.classList.remove('open', 'show');
+            shownCards = [];
+        });
+    }, 400);
+}
 
-                shownCards[1].classList.add('match');
-                shownCards[1].classList.add('open');
-                shownCards[1].classList.add('show');
+function compare() {
+    if (shownCards.length == 2) {
+        countMoves();
 
-                shownCards.length = 0; //reset array
+        if (shownCards[0].dataset.card == shownCards[1].dataset.card) {
+            match();
 
-                totalMatches++;
-            } else { //if they don't match
-                setTimeout(function() {
-                    shownCards.forEach(function(card) {
-                        card.classList.remove('open', 'show');
-
-                    });
-                    shownCards.length = 0; //reset array
-
-                }, 800);
-
-            }
-
-            countMoves();
+        } else {
+            noMatch();
         }
         winGame();
-    });
 
-});
+    }
+};
 
 //reset game
 function restartGame() {
 
-    //remove the classes from the cards
-    /* kitty.forEach(function(card) {
-         let item = document.querySelector('li');
-         let names = item.classList;
-         
-         restart = names.remove('card', false);
-
-     });*/
-
     //reset moves
     countMoves('0');
+    move = 0;
     moveCounter.innerHTML = '0';
 
     //reset star rating
-
     for (i = 0; i < star.length; i++) {
         star[i].style.visibility = 'visible';
     }
@@ -160,8 +190,9 @@ function restartGame() {
     startGame();
 
     //reset total matches
-    totalMatches = 0;
+    totalMatch = 0;
 }
+restart.addEventListener('click', restartGame);
 
 let star = document.querySelectorAll('.fa-star');
 //counting moves
@@ -188,10 +219,6 @@ function countMoves() {
         }
     }
 };
-
-
-
-
 
 //timer start
 let second = 0;
@@ -221,14 +248,8 @@ function startTimer() {
 
 
 //congratulations pop up
-let congrats = document.querySelector('.modal');
-let finishTime = document.getElementById('finishTime');
-let starRating = document.getElementById('starRating');
-let finalMove = document.getElementById('FinalMoveCount');
-
-
 function winGame() {
-    if (totalMatches === 8) {
+    if (totalMatch === 8) {
 
 
 
@@ -265,6 +286,7 @@ const playAgain = document.getElementById('playAgain');
 
 function playAgainOp() {
     playAgain.addEventListener('click', function(e) {
+        congrats.style.display = 'none';
         restartGame();
     });
 }
