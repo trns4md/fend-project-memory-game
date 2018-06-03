@@ -7,18 +7,10 @@ let finalMove = document.getElementById('FinalMoveCount');
 let cards = document.getElementsByClassName('card');
 let restart = document.querySelector('.restart');
 
-
-
-
-
-
-
-
-
 /*
  * Create a list that holds all of your cards
  */
-const cardDeck = [
+const cardType = [
     'fa-cube',
     'fa-anchor',
     'fa-leaf',
@@ -26,18 +18,9 @@ const cardDeck = [
     'fa-bomb',
     'fa-bolt',
     'fa-paper-plane-o',
-    'fa-bicycle',
-    'fa-cube',
-    'fa-anchor',
-    'fa-leaf',
-    'fa-diamond',
-    'fa-bomb',
-    'fa-bolt',
-    'fa-paper-plane-o',
-    'fa-bicycle',
-
+    'fa-bicycle'
 ];
-
+let cardDeck = cardType.concat(cardType);
 
 function makeCard(card) {
     return `<li class="card" data-card= "${card}"><i class= " fa ${card}"></i></li>`;
@@ -64,12 +47,8 @@ function shuffle(array) {
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
     }
-
     return array;
 }
-
-
-
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -81,11 +60,6 @@ function shuffle(array) {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
-
-
-
-
-
 //make cards clickable
 let shownCards = [];
 
@@ -95,14 +69,6 @@ function cardDisplay() {
     shownCards.push(this);
     compare();
 }
-
-
-
-
-
-
-
-
 //start game
 function startGame() {
     const deck = document.querySelector('.deck');
@@ -115,19 +81,8 @@ function startGame() {
 
     }
 
-
 }
 startGame();
-
-
-
-
-
-
-
-
-
-
 
 //compare cards
 
@@ -184,7 +139,11 @@ function restartGame() {
 
     //clear timer
     clearInterval(interval);
-    timer.innerHTML = "0 minutes 0seconds";
+    interval = "";
+    second = 0;
+    mintue = 0;
+    timer.innerHTML = '0 minutes 0 seconds';
+
 
     //shuffle the deck 
     startGame();
@@ -195,6 +154,7 @@ function restartGame() {
 restart.addEventListener('click', restartGame);
 
 let star = document.querySelectorAll('.fa-star');
+
 //counting moves
 function countMoves() {
     move += 1;
@@ -224,7 +184,7 @@ function countMoves() {
 let second = 0;
 let minute = 0;
 const timer = document.querySelector('.timer');
-let interval;
+let interval = "";
 let matches = document.getElementsByClassName('.match');
 
 function startTimer() {
@@ -243,16 +203,9 @@ function startTimer() {
 
 }
 
-
-
-
-
 //congratulations pop up
 function winGame() {
     if (totalMatch === 8) {
-
-
-
         let score = document.querySelector(".stars").innerHTML;
         //show finish time
         finishTime.innerHTML = timer.innerHTML;
